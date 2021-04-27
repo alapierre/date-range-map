@@ -9,12 +9,15 @@ func TestRangeMap_Get(t *testing.T) {
 
 	type fields struct {
 		Keys   []TimeRange
-		Values []string
+		Values []interface{}
 	}
 
 	type args struct {
 		key time.Time
 	}
+
+	values := make([]interface{}, 0)
+	values = append(values, "a", "b", "c", "d", "e")
 
 	inputData := fields{
 		Keys: []TimeRange{
@@ -23,7 +26,7 @@ func TestRangeMap_Get(t *testing.T) {
 			CreateRange("2021-05-15", "2021-05-31"),
 			CreateRange("2021-06-15", "2021-06-20"),
 			CreateRange("2021-07-15", "2021-09-20")},
-		Values: []string{"a", "b", "c", "d", "e"},
+		Values: values,
 	}
 
 	tests := []struct {
@@ -73,7 +76,7 @@ func TestRangeMap_Get(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm := RangeMap{
+			rm := rangeMap{
 				keys:   tt.fields.Keys,
 				values: tt.fields.Values,
 			}

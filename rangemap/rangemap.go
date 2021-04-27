@@ -11,24 +11,37 @@ type TimeRange struct {
 	U time.Time
 }
 
-type RangeMap struct {
-	keys   []TimeRange
-	values []string
+// ValueInTime TODO: powinna być funkcja do tworzenia instancji (może do innego pliku?)
+type ValueInTime struct {
+	From  time.Time
+	To    time.Time
+	Value interface{}
 }
 
-// New create new instance of TimeRange map. Keys have to be sorted!
-func New(ranges []TimeRange, values []string) (*RangeMap, error) {
-	if len(ranges) != len(values) {
-		return nil, fmt.Errorf("size of keys and values should be the same")
+type RangeMap interface {
+	Get(key time.Time) (interface{}, bool)
+}
+
+type rangeMap struct {
+	keys   []TimeRange
+	values []interface{}
+}
+
+// New create new instance of RangeMap map. Keys have to be sorted!
+func New(values []ValueInTime) (RangeMap, error) {
+
+	result := rangeMap{}
+
+	for _, value := range values {
+		result.keys = append(result.keys, TimeRange{L: value.From, U: value.To})
+		result.values = append(result.values, value.Value)
 	}
-	return &RangeMap{
-		keys:   ranges,
-		values: values,
-	}, nil
+
+	return &result, nil
 }
 
 // Get works like Guava RangeMap com.google.common.collect.ImmutableRangeMap
-func (rm RangeMap) Get(key time.Time) (string, bool) {
+func (rm rangeMap) Get(key time.Time) (interface{}, bool) {
 	count := len(rm.keys)
 	i := sort.Search(count, func(i int) bool {
 		return key.Before(rm.keys[i].L)
@@ -38,7 +51,7 @@ func (rm RangeMap) Get(key time.Time) (string, bool) {
 	if i >= 0 && i < count && !key.After(rm.keys[i].U) {
 		return rm.values[i], true
 	}
-	return "", false
+	return nil, false
 }
 
 func CreateDate(str string) time.Time {
@@ -54,4 +67,10 @@ func CreateRange(from, to string) TimeRange {
 		L: CreateDate(from),
 		U: CreateDate(to),
 	}
+}
+
+func sortValueInTime(values []ValueInTime) {
+	sort.Slice(values, func(i, j int) bool {
+		return values[i].From.Before(values[j].From)
+	})
 }
