@@ -16,7 +16,7 @@ package main
 
 import (
 	"fmt"
-	rangemap "github.com/alapierre/date-range-map"
+	"github.com/alapierre/date-range-map/rangemap"
 )
 
 func main()  {

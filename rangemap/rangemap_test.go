@@ -74,8 +74,8 @@ func TestRangeMap_Get(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			rm := RangeMap{
-				Keys:   tt.fields.Keys,
-				Values: tt.fields.Values,
+				keys:   tt.fields.Keys,
+				values: tt.fields.Values,
 			}
 			got, got1 := rm.Get(tt.args.key)
 			if got != tt.want {

@@ -12,8 +12,8 @@ type TimeRange struct {
 }
 
 type RangeMap struct {
-	Keys   []TimeRange
-	Values []string
+	keys   []TimeRange
+	values []string
 }
 
 // New create new instance of TimeRange map. Keys have to be sorted!
@@ -22,21 +22,21 @@ func New(ranges []TimeRange, values []string) (*RangeMap, error) {
 		return nil, fmt.Errorf("size of keys and values should be the same")
 	}
 	return &RangeMap{
-		Keys:   ranges,
-		Values: values,
+		keys:   ranges,
+		values: values,
 	}, nil
 }
 
 // Get works like Guava RangeMap com.google.common.collect.ImmutableRangeMap
 func (rm RangeMap) Get(key time.Time) (string, bool) {
-	count := len(rm.Keys)
+	count := len(rm.keys)
 	i := sort.Search(count, func(i int) bool {
-		return key.Before(rm.Keys[i].L)
+		return key.Before(rm.keys[i].L)
 	})
 
 	i -= 1
-	if i >= 0 && i < count && !key.After(rm.Keys[i].U) {
-		return rm.Values[i], true
+	if i >= 0 && i < count && !key.After(rm.keys[i].U) {
+		return rm.values[i], true
 	}
 	return "", false
 }
