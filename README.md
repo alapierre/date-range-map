@@ -12,30 +12,36 @@ from 2020-01-01 he or she was earning 100.00 but after 2020-09-01 he or she will
 | 2020-10-01 - 2999-13-31 | 200   |
 
 ````go
-
 package main
 
 import (
-   "github.com/alapierre/date-range-map/rangemap"
+	"fmt"
+	rangemap "github.com/alapierre/date-range-map"
 )
 
 func main()  {
 
 	keys := []rangemap.TimeRange{
-		CreateRange("2021-01-01", "2021-01-31"),
-		CreateRange("2021-03-01", "2021-04-30"),
-		CreateRange("2021-05-15", "2021-05-31"),
-		CreateRange("2021-06-15", "2021-06-20"),
-		CreateRange("2021-07-15", "2021-09-20")},
+		rangemap.CreateRange("2021-01-01", "2021-01-31"),
+		rangemap.CreateRange("2021-03-01", "2021-04-30"),
+		rangemap.CreateRange("2021-05-15", "2021-05-31"),
+		rangemap.CreateRange("2021-06-15", "2021-06-20"),
+		rangemap.CreateRange("2021-07-15", "2021-09-20")}
 
-rm := rangemap.New(keys, []string{"a","b","c","d","e"})
+	rm, err := rangemap.New(keys, []string{"a","b","c","d","e"})
 
-v := rm.Get(rangemap.CreateDate("2021-03-01"))
+	if err != nil {
+		panic(err)
+	}
 
-fmt.Println(v)
-	
+	v, found := rm.Get(rangemap.CreateDate("2021-03-01"))
+
+	if found {
+		fmt.Println(v)
+	} else {
+		fmt.Println("not found")
+	}
+
 }
-
-
 
 ````
