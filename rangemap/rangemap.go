@@ -50,20 +50,20 @@ func (rm rangeMap) Get(key time.Time) (interface{}, bool) {
 	return nil, false
 }
 
-// CreateDate parse time in YYYY-MM-dd format into time.Time. Errors are ignored!
-func CreateDate(str string) time.Time {
+// MustCreateDate parse time in YYYY-MM-dd format into time.Time. Parsing errors will panic!
+func MustCreateDate(str string) time.Time {
 	t, err := time.Parse("2006-01-02", str)
 	if err != nil {
-		fmt.Printf("CreateDate: date in wrong format %s - expected YYYY-MM-dd\n", str)
+		panic(fmt.Errorf("MustCreateDate: date in wrong format %s - expected YYYY-MM-dd, %v", str, err))
 	}
 	return t
 }
 
-// CreateRange parse time in YYYY-MM-dd format into TimeRange. Errors are ignored!
-func CreateRange(from, to string) TimeRange {
+// MustCreateRange parse time in YYYY-MM-dd format into TimeRange. Parsing errors will panic!
+func MustCreateRange(from, to string) TimeRange {
 	return TimeRange{
-		L: CreateDate(from),
-		U: CreateDate(to),
+		L: MustCreateDate(from),
+		U: MustCreateDate(to),
 	}
 }
 
